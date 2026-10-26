@@ -1,0 +1,20 @@
+{
+  "dev_samples": 29,
+  "test_samples": 74,
+  "fitted_weights_on_dev": {
+    "w_S1": -2.6726,
+    "w_S2": 1.5947,
+    "w_S5": -1.2581,
+    "bias": 0.0084
+  },
+  "test_auroc_confidence": 0.6729,
+  "test_ece_confidence": 0.4631,
+  "test_auroc_fitted": 0.7271,
+  "test_ece_fitted": 0.1097,
+  "signal_ablation": {
+    "all_signals_auroc": 0.6729,
+    "drop_S1_auroc": 0.6164,
+    "drop_S2_auroc": 0.2729,
+    "drop_S5_auroc": 0.3271
+  }
+}

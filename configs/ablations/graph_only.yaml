@@ -1,0 +1,6 @@
+# configs/ablations/graph_only.yaml
+# Baseline B: forced graph, no correction loop
+agent:
+  forced_route: "graph"
+  max_iterations: 0
+  grader_threshold: 0.6

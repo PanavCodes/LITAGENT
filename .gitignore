@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data and artifacts (git-ignored except samples)
+data/raw/
+data/processed/
+data/index/
+data/eval/
+data/cache/
+*.faiss
+*.pkl
+*.parquet
+*.index
+
+# Sensitive files
+.env
+*.pem
+*.key
+
+# Reference repos
+third_party/
+
+# Traces and large run logs
+results/traces/
+
+# Cache directories
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/

@@ -1,0 +1,6 @@
+# configs/ablations/router_crag.yaml
+# Full LitAgent: agentic router with CRAG correction loop
+agent:
+  forced_route: null
+  max_iterations: 2
+  grader_threshold: 0.6

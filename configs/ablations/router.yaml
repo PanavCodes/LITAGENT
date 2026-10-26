@@ -1,0 +1,6 @@
+# configs/ablations/router.yaml
+# Agentic router without correction loop
+agent:
+  forced_route: null
+  max_iterations: 0
+  grader_threshold: 0.6

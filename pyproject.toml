@@ -1,0 +1,72 @@
+[project]
+name = "litagent"
+version = "0.1.0"
+description = "Agentic hybrid RAG for scientific literature review"
+requires-python = ">=3.11,<3.13"
+readme = "README.md"
+# Versions are intentionally unpinned here: in Phase 0 the agent must install,
+# run the smoke tests, then PIN the exact working versions (uv lock / pip freeze).
+dependencies = [
+  "langgraph",
+  "langchain-core",
+  "neo4j",
+  "neo4j-graphrag",
+  "sentence-transformers",
+  "faiss-cpu",
+  "rank-bm25",
+  "arxiv",
+  "pyalex",
+  "pymupdf",
+  "networkx",
+  "ragas",
+  "scikit-learn",
+  "scipy",
+  "numpy",
+  "pandas",
+  "matplotlib",
+  "pydantic>=2",
+  "pydantic-settings",
+  "pyyaml",
+  "tenacity",
+  "gradio",
+  "python-dotenv",
+  "tqdm",
+  "langchain-community>=0.4.2",
+  "langchain-google-vertexai>=3.2.5",
+]
+
+[project.optional-dependencies]
+# add ONE provider package, e.g. langchain-openai / langchain-anthropic / langchain-google-genai / langchain-groq
+dev = ["pytest", "pytest-mock", "pytest-cov", "ruff", "mypy", "types-PyYAML"]
+
+[project.scripts]
+litagent = "litagent.ui.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = ["integration: needs network, Docker or an API key (skipped by default)"]
+addopts = "-m 'not integration'"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+ignore = ["BLE001"]
+
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+exclude = [
+    "^\\.venv/",
+    "^third_party/",
+]
+

@@ -1,0 +1,6 @@
+# configs/ablations/vector_only.yaml
+# Baseline A: forced vector, no correction loop
+agent:
+  forced_route: "vector"
+  max_iterations: 0
+  grader_threshold: 0.6

@@ -1,0 +1,69 @@
+# Router Few-Shot Bank for LitAgent
+# Routes: graph, vector, both, none
+
+system_prompt: |
+  You are an expert query router for LitAgent, a scientific literature review system.
+  Analyze the user's question and select the optimal retrieval strategy:
+  - "graph": Questions about structural relationships, citations (who cites whom), authorship (who wrote what), co-authors, publication years, or count aggregations.
+  - "vector": Questions about specific document contents, methods, empirical findings, algorithms, datasets, limitations, or architecture details.
+  - "both": Questions requiring citation/graph structure combined with content details (e.g., "Among papers citing X, what method do they use?").
+  - "none": Questions that are completely out of scope or not answerable from scientific computer science literature (e.g., weather, sports, general knowledge).
+
+  Respond strictly in valid JSON with keys "route" and "rationale".
+
+examples:
+  # Graph route examples
+  - question: "Which papers in the corpus cite Dense Passage Retrieval?"
+    route: "graph"
+    rationale: "Requires traversing incoming CITES relationship edges in the citation graph."
+
+  - question: "Who are the most prolific authors in the corpus?"
+    route: "graph"
+    rationale: "Requires aggregating WROTE edges grouped by Author node."
+
+  - question: "How many papers were published in 2024?"
+    route: "graph"
+    rationale: "Requires filtering by PUBLISHED_IN Year relationship and counting Paper nodes."
+
+  - question: "Which papers are cited by both paper A and paper B?"
+    route: "graph"
+    rationale: "Requires finding co-citation intersection in the citation graph."
+
+  - question: "What is the citation path between paper X and paper Y?"
+    route: "graph"
+    rationale: "Requires graph path traversal across CITES edges."
+
+  # Vector route examples
+  - question: "What retrieval metric does DPR report as its main result?"
+    route: "vector"
+    rationale: "Requires searching chunk text for specific experimental results and metrics."
+
+  - question: "How does ColBERT handle late interaction between tokens?"
+    route: "vector"
+    rationale: "Requires content search on algorithm mechanism explained in document passages."
+
+  - question: "What limitations do the authors mention regarding memory consumption?"
+    route: "vector"
+    rationale: "Requires searching paper text for limitations and memory details."
+
+  - question: "What loss function is used during contrastive training?"
+    route: "vector"
+    rationale: "Requires passage retrieval for mathematical loss formulation in the paper text."
+
+  # Both route examples
+  - question: "Among papers citing DPR, which ones propose a reranking method and what do they say about latency?"
+    route: "both"
+    rationale: "Requires graph traversal to find citing papers, then vector search over those papers to extract latency details."
+
+  - question: "Summarise the evaluation approach used by the three most-cited papers about hybrid search."
+    route: "both"
+    rationale: "Requires graph ranking by citation count to identify top papers, then vector search to summarise evaluation methods."
+
+  # None route examples
+  - question: "What is the weather in Mumbai today?"
+    route: "none"
+    rationale: "Weather inquiry is unrelated to the scientific literature review corpus."
+
+  - question: "Who won the 2026 football World Cup?"
+    route: "none"
+    rationale: "Sports query is outside the scope of scientific papers."

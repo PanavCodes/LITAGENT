@@ -1,0 +1,67 @@
+# Cypher Few-Shot Bank for LitAgent
+# Schema: Paper, Author, Keyword, Category, Year
+# Relationships:
+#   (Author)-[:WROTE {position}]->(Paper)
+#   (Paper)-[:CITES]->(Paper)
+#   (Paper)-[:HAS_KEYWORD {rank}]->(Keyword)
+#   (Paper)-[:IN_CATEGORY {primary}]->(Category)
+#   (Paper)-[:PUBLISHED_IN]->(Year)
+
+examples:
+  - question: "Who wrote the paper Dense Passage Retrieval?"
+    cypher: |
+      MATCH (a:Author)-[:WROTE]->(p:Paper)
+      WHERE toLower(p.title) CONTAINS toLower("Dense Passage Retrieval")
+      RETURN a.name AS author, p.title AS title LIMIT 50;
+
+  - question: "Which papers cite Dense Passage Retrieval?"
+    cypher: |
+      MATCH (p:Paper)-[:CITES]->(q:Paper)
+      WHERE toLower(q.title) CONTAINS toLower("Dense Passage Retrieval")
+      RETURN p.title AS citing_paper, p.arxiv_id AS arxiv_id, p.year AS year LIMIT 50;
+
+  - question: "How many papers were published in 2024?"
+    cypher: |
+      MATCH (p:Paper)-[:PUBLISHED_IN]->(y:Year {value: 2024})
+      RETURN count(p) AS paper_count;
+
+  - question: "Who are the top 5 most prolific authors in the corpus?"
+    cypher: |
+      MATCH (a:Author)-[:WROTE]->(p:Paper)
+      RETURN a.name AS author, count(p) AS paper_count
+      ORDER BY paper_count DESC LIMIT 5;
+
+  - question: "Which papers are cited by both paper 2004.04906 and paper 2005.11401?"
+    cypher: |
+      MATCH (a:Paper {arxiv_id: "2004.04906"})-[:CITES]->(x:Paper)<-[:CITES]-(b:Paper {arxiv_id: "2005.11401"})
+      RETURN x.title AS shared_reference, x.arxiv_id AS arxiv_id LIMIT 50;
+
+  - question: "Is there a citation path between paper 2004.04906 and paper 2401.15884?"
+    cypher: |
+      MATCH path = shortestPath((a:Paper {arxiv_id: "2004.04906"})-[:CITES*..3]->(b:Paper {arxiv_id: "2401.15884"}))
+      RETURN [node in nodes(path) | node.title] AS paper_path;
+
+  - question: "Find papers published in 2023 with the keyword reranking"
+    cypher: |
+      MATCH (p:Paper)-[:PUBLISHED_IN]->(:Year {value: 2023})
+      MATCH (p)-[:HAS_KEYWORD]->(k:Keyword)
+      WHERE toLower(k.text) CONTAINS "reranking"
+      RETURN p.title AS title, p.arxiv_id AS arxiv_id LIMIT 50;
+
+  - question: "What papers did Vladimir Karpukhin author?"
+    cypher: |
+      MATCH (a:Author)-[:WROTE]->(p:Paper)
+      WHERE toLower(a.name) CONTAINS "vladimir karpukhin"
+      RETURN p.title AS title, p.year AS year, p.arxiv_id AS arxiv_id LIMIT 50;
+
+  - question: "Which papers in category cs.IR have more than 10 citations?"
+    cypher: |
+      MATCH (p:Paper)-[:IN_CATEGORY]->(c:Category {code: "cs.IR"})
+      WHERE p.cited_by_count > 10
+      RETURN p.title AS title, p.cited_by_count AS citations ORDER BY citations DESC LIMIT 50;
+
+  - question: "How many papers cite Retrieval-Augmented Generation?"
+    cypher: |
+      MATCH (p:Paper)-[:CITES]->(q:Paper)
+      WHERE toLower(q.title) CONTAINS toLower("Retrieval-Augmented Generation")
+      RETURN count(p) AS citing_count;

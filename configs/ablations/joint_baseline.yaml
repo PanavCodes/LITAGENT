@@ -1,0 +1,6 @@
+# configs/ablations/joint_baseline.yaml
+# Non-agentic baseline analogue: forced both graph & vector, no loop
+agent:
+  forced_route: "both"
+  max_iterations: 0
+  grader_threshold: 0.6
